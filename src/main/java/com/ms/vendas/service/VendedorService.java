@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,10 +27,13 @@ public class VendedorService {
         this.vendedorMapper = vendedorMapper;
     }
 
-    @Transactional(rollbackOn = Exception.class)
+    @Transactional
     public Vendedor cadastrar(VendedorCadastroDTO dto) {
 
         var vendedor = vendedorMapper.toEntity(dto);
+        vendedor.setStatusVendedor(StatusVendedor.ATIVO);
+        vendedor.setUltimaAlteracao(LocalDateTime.now());
+        vendedor.setDataCriacao(LocalDateTime.now());
         return vendedorRepository.save(vendedor);
 
     }
