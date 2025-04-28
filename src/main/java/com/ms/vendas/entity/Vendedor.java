@@ -25,6 +25,9 @@ public class Vendedor {
     private String email;
 
     @NotNull
+    private String cpf;
+
+    @NotNull
     private String telefone;
 
     @NotNull

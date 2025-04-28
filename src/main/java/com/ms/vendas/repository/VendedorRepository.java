@@ -1,4 +1,11 @@
 package com.ms.vendas.repository;
 
-public interface VendedorRepository {
+import com.ms.vendas.entity.Vendedor;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.UUID;
+
+@Repository
+public interface VendedorRepository extends JpaRepository<Vendedor, UUID> {
 }
