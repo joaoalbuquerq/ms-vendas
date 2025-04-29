@@ -5,6 +5,7 @@ import com.ms.vendas.dto.VendedorCadastroDTO;
 import com.ms.vendas.dto.VendedorDetalheDTO;
 import com.ms.vendas.entity.Vendedor;
 import com.ms.vendas.enums.StatusVendedor;
+import com.ms.vendas.exception.VendedorInativadoExpcetion;
 import com.ms.vendas.exception.VendedorNaoEncontradoException;
 import com.ms.vendas.mapper.VendedorMapper;
 import com.ms.vendas.repository.VendedorRepository;
@@ -39,11 +40,9 @@ public class VendedorService {
     }
 
     public List<Vendedor> listar(StatusVendedor statusVendedor) {
-
         if(statusVendedor == null){
             return vendedorRepository.findAll();
         }
-
         return vendedorRepository.findAllByStatusVendedor(statusVendedor);
     }
 
@@ -52,7 +51,6 @@ public class VendedorService {
     }
 
     public Vendedor atualizar(UUID id, VendedorAtualizacaoDTO dto) {
-
         Vendedor vendedor = pesquisarPorId(id);
         vendedor = vendedorMapper.updateVendedorFromDto(dto, vendedor);
         vendedor.setUltimaAlteracao(LocalDateTime.now());
@@ -60,11 +58,12 @@ public class VendedorService {
     }
 
     public void inativar(UUID id) {
-
         Vendedor vendedor = pesquisarPorId(id);
+        if(vendedor.getStatusVendedor() == StatusVendedor.INATIVO){
+            throw new VendedorInativadoExpcetion("Vendedor: " + vendedor.getNome() + " se encontra INATIVO");
+        }
         vendedor.setStatusVendedor(StatusVendedor.INATIVO);
         vendedor.setUltimaAlteracao(LocalDateTime.now());
         vendedorRepository.save(vendedor);
-
     }
 }
