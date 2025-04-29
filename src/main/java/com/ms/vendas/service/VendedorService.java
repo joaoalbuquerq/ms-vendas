@@ -38,8 +38,13 @@ public class VendedorService {
 
     }
 
-    public List<Vendedor> listar() {
-        return vendedorRepository.findAll();
+    public List<Vendedor> listar(StatusVendedor statusVendedor) {
+
+        if(statusVendedor == null){
+            return vendedorRepository.findAll();
+        }
+
+        return vendedorRepository.findAllByStatusVendedor(statusVendedor);
     }
 
     public Vendedor pesquisarPorId(UUID id) {
@@ -50,6 +55,7 @@ public class VendedorService {
 
         Vendedor vendedor = pesquisarPorId(id);
         vendedor = vendedorMapper.updateVendedorFromDto(dto, vendedor);
+        vendedor.setUltimaAlteracao(LocalDateTime.now());
         return vendedorRepository.save(vendedor);
     }
 
@@ -57,6 +63,7 @@ public class VendedorService {
 
         Vendedor vendedor = pesquisarPorId(id);
         vendedor.setStatusVendedor(StatusVendedor.INATIVO);
+        vendedor.setUltimaAlteracao(LocalDateTime.now());
         vendedorRepository.save(vendedor);
 
     }

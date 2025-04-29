@@ -3,6 +3,7 @@ package com.ms.vendas.controller;
 import com.ms.vendas.dto.VendedorAtualizacaoDTO;
 import com.ms.vendas.dto.VendedorCadastroDTO;
 import com.ms.vendas.dto.VendedorDetalheDTO;
+import com.ms.vendas.enums.StatusVendedor;
 import com.ms.vendas.mapper.VendedorMapper;
 import com.ms.vendas.service.VendedorService;
 import jakarta.validation.Valid;
@@ -33,8 +34,8 @@ public class VendedorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VendedorDetalheDTO>> listar(){
-        return ResponseEntity.ok(vendedorMapper.toListDtoDetail(vendedorService.listar()));
+    public ResponseEntity<List<VendedorDetalheDTO>> listar(@RequestParam(required = false) StatusVendedor statusVendedor){
+        return ResponseEntity.ok(vendedorMapper.toListDtoDetail(vendedorService.listar(statusVendedor)));
     }
 
     @GetMapping("/{id}")
