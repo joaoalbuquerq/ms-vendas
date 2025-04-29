@@ -9,9 +9,9 @@ import com.ms.vendas.exception.VendedorInativadoExpcetion;
 import com.ms.vendas.exception.VendedorNaoEncontradoException;
 import com.ms.vendas.mapper.VendedorMapper;
 import com.ms.vendas.repository.VendedorRepository;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -38,7 +38,7 @@ public class VendedorService {
         return vendedorRepository.save(vendedor);
 
     }
-
+    @Transactional(readOnly = true)
     public List<Vendedor> listar(StatusVendedor statusVendedor) {
         if(statusVendedor == null){
             return vendedorRepository.findAll();
@@ -46,10 +46,12 @@ public class VendedorService {
         return vendedorRepository.findAllByStatusVendedor(statusVendedor);
     }
 
+    @Transactional(readOnly = true)
     public Vendedor pesquisarPorId(UUID id) {
         return vendedorRepository.findById(id).orElseThrow(() -> new VendedorNaoEncontradoException("Vendedor não existe na base de dados"));
     }
 
+    @Transactional()
     public Vendedor atualizar(UUID id, VendedorAtualizacaoDTO dto) {
         Vendedor vendedor = pesquisarPorId(id);
         vendedor = vendedorMapper.updateVendedorFromDto(dto, vendedor);
@@ -57,6 +59,7 @@ public class VendedorService {
         return vendedorRepository.save(vendedor);
     }
 
+    @Transactional()
     public void inativar(UUID id) {
         Vendedor vendedor = pesquisarPorId(id);
         if(vendedor.getStatusVendedor() == StatusVendedor.INATIVO){
