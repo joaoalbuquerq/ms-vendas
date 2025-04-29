@@ -6,6 +6,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -31,6 +32,9 @@ public class Vendedor {
     @NotNull
     @Enumerated(EnumType.STRING)
     private StatusVendedor statusVendedor;
+
+    @OneToMany(mappedBy = "vendedor", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Venda> vendas;
 
     @NotNull
     private LocalDateTime dataCriacao;
@@ -100,5 +104,13 @@ public class Vendedor {
 
     public void setUltimaAlteracao(LocalDateTime ultimaAlteracao) {
         this.ultimaAlteracao = ultimaAlteracao;
+    }
+
+    public List<Venda> getVendas() {
+        return vendas;
+    }
+
+    public void setVendas(List<Venda> vendas) {
+        this.vendas = vendas;
     }
 }
